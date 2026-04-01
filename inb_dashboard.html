@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I&B Unit Performance Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f5f4f1;
+      --surface: #ffffff;
+      --surface-2: #f0eeea;
+      --border: #e2dfd8;
+      --text-primary: #1a1916;
+      --text-secondary: #6b6860;
+      --text-muted: #a8a49e;
+      --accent: #1a1916;
+      --accent-green: #1a7a4a;
+      --accent-red: #b83232;
+      --accent-amber: #c47b00;
+      --accent-blue: #1d5fa8;
+      --tag-green-bg: #ecf7f1;
+      --tag-green-text: #1a7a4a;
+      --tag-red-bg: #fdf0f0;
+      --tag-red-text: #b83232;
+      --tag-blue-bg: #edf4fc;
+      --tag-blue-text: #1d5fa8;
+      --font: 'DM Sans', sans-serif;
+      --mono: 'DM Mono', monospace;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text-primary);
+      font-size: 14px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 28px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .logo-mark {
+      width: 28px;
+      height: 28px;
+      background: var(--accent);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-mark svg {
+      width: 14px;
+      height: 14px;
+      fill: white;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 2px;
+    }
+
+    .header-nav a {
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+
+    .header-nav a:hover,
+    .header-nav a.active {
+      background: var(--surface-2);
+      color: var(--text-primary);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .last-updated {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    /* FILTERS */
+    .filters-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .filters-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 12px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
+    select {
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 28px 6px 10px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .filter-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+
+    .reset-btn {
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 5px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .reset-btn:hover {
+      background: var(--surface-2);
+      color: var(--text-primary);
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 28px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    /* SECTION */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* KPI GRID */
+    .kpi-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .kpi-grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .kpi-grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .kpi-grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .kpi-grid-5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+
+    /* KPI CARD */
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      position: relative;
+      cursor: default;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      box-shadow: var(--shadow);
+    }
+
+    .kpi-card:hover {
+      border-color: #c8c3bb;
+      box-shadow: var(--shadow-md);
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .kpi-label .info-dot {
+      width: 14px;
+      height: 14px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: var(--text-muted);
+      font-style: italic;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .kpi-value {
+      font-family: var(--font);
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value.large {
+      font-size: 36px;
+    }
+
+    .kpi-value.small {
+      font-size: 22px;
+    }
+
+    .kpi-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .badge-green {
+      background: var(--tag-green-bg);
+      color: var(--tag-green-text);
+    }
+
+    .badge-red {
+      background: var(--tag-red-bg);
+      color: var(--tag-red-text);
+    }
+
+    .badge-amber {
+      background: #fef9ec;
+      color: var(--accent-amber);
+    }
+
+    .badge-blue {
+      background: var(--tag-blue-bg);
+      color: var(--tag-blue-text);
+    }
+
+    .badge-neutral {
+      background: var(--surface-2);
+      color: var(--text-secondary);
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 4px;
+      background: var(--surface-2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .prog-green {
+      background: var(--accent-green);
+    }
+
+    .prog-amber {
+      background: var(--accent-amber);
+    }
+
+    .prog-blue {
+      background: var(--accent-blue);
+    }
+
+    .prog-dark {
+      background: var(--accent);
+    }
+
+    .progress-pct {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    /* TOOLTIP */
+    .tooltip {
+      display: none;
+      position: absolute;
+      z-index: 200;
+      width: 320px;
+      background: var(--text-primary);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      pointer-events: none;
+    }
+
+    .tooltip::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 20px;
+      width: 10px;
+      height: 10px;
+      background: var(--text-primary);
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+    
+    .tooltip.tooltip-up::before {
+      top: auto;
+      bottom: -5px;
+    }
+    
+    .tooltip.tooltip-left-shift::before {
+      left: auto;
+      right: 20px;
+    }
+
+    .tooltip-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #6b7280;
+      margin-bottom: 4px;
+    }
+
+    .tooltip-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f9fafb;
+      margin-bottom: 10px;
+    }
+
+    .tooltip-def {
+      font-size: 12px;
+      color: #d1d5db;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+
+    .tooltip-formula {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: #e5e7eb;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 6px;
+      padding: 8px 10px;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+
+    /* CHART CARD */
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .chart-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .chart-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .chart-legend {
+      display: flex;
+      gap: 14px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+
+    /* RATIO BAR */
+    .ratio-bar {
+      height: 6px;
+      border-radius: 3px;
+      display: flex;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .ratio-a {
+      background: var(--accent);
+    }
+
+    .ratio-b {
+      background: var(--border);
+    }
+
+    /* WIDE CARD */
+    .kpi-card-wide {
+      grid-column: span 2;
+    }
+
+    /* TWO COLUMN LAYOUT */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* CHART CONTAINER */
+    .chart-area {
+      position: relative;
+      height: 240px;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .kpi-grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .kpi-grid-5 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+
+      .kpi-grid-4,
+      .kpi-grid-3,
+      .kpi-grid-2,
+      .kpi-grid-5 {
+        grid-template-columns: 1fr;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      .header-nav {
+        display: none;
+      }
+
+      .tooltip {
+        width: 260px;
+      }
+    }
+
+    /* FOOTER */
+    footer {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div style="display:flex;align-items:center;gap:20px">
+        <div class="logo">
+          <div class="logo-mark">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="5" height="5" rx="1" />
+              <rect x="9" y="2" width="5" height="5" rx="1" />
+              <rect x="2" y="9" width="5" height="5" rx="1" />
+              <rect x="9" y="9" width="5" height="5" rx="1" />
+            </svg>
+          </div>
+          I&amp;B Unit Dashboard
+        </div>
+        <nav class="header-nav">
+          <a href="#strategic" class="active">Strategic</a>
+          <a href="#revenue">Revenue</a>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#profitability">Profitability &amp; Productivity</a>
+        </nav>
+      </div>
+      <div class="header-right">
+        <span class="last-updated"><span class="live-dot"></span> Live · Apr 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- FILTERS -->
+  <div class="filters-bar">
+    <div class="filters-inner">
+      <span class="filter-label">Filter</span>
+      <select id="filterYear" onchange="updateDashboard()">
+        <option value="2026">2026</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+      </select>
+      <select id="filterMonth" onchange="updateDashboard()">
+        <option value="all">All Months</option>
+        <option value="1">January</option>
+        <option value="2">February</option>
+        <option value="3">March</option>
+        <option value="4">April</option>
+        <option value="5">May</option>
+        <option value="6">June</option>
+        <option value="7">July</option>
+        <option value="8">August</option>
+        <option value="9">September</option>
+        <option value="10">October</option>
+        <option value="11">November</option>
+        <option value="12">December</option>
+      </select>
+      <select id="filterBU" onchange="updateDashboard()">
+        <option value="all">All Business Units</option>
+        <option value="bu1">BU — Technology</option>
+        <option value="bu2">BU — Consulting</option>
+        <option value="bu3">BU — Managed Services</option>
+      </select>
+      <div class="filter-divider"></div>
+      <button class="reset-btn" onclick="resetFilters()">Reset</button>
+    </div>
+  </div>
+
+  <main>
+
+    <!-- 1. STRATEGIC TARGETS -->
+    <section id="strategic">
+      <div class="section-header">
+        <span class="section-label">Strategic Targets</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="kpi-grid kpi-grid-4">
+
+        <div class="kpi-card">
+          <div class="kpi-label">Unit Goal <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-unit-goal">$15.0M</div>
+          <div class="kpi-sub">Annual Budget Target</div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Unit Goal</div>
+            <div class="tooltip-def">The annual revenue target set in the unit's approved budget for the fiscal year.
+            </div>
+            <div class="tooltip-formula">Unit_Goal = Annual_Budget_Revenue_Target</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Forecast Revenue <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-forecast">$14.2M</div>
+          <span class="kpi-badge badge-amber">▼ 5.3% vs Goal</span>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Forecast Revenue</div>
+            <div class="tooltip-def">Total expected revenue for the year, combining actual recognized revenue to date
+              and the latest rest-of-year forecast.</div>
+            <div class="tooltip-formula">Forecast_Revenue = Recognized_Revenue + Rest_of_Year_Forecast (latest)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Run Rate <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-runrate">$13.6M</div>
+          <span class="kpi-badge badge-neutral">Annualized</span>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Run Rate</div>
+            <div class="tooltip-def">Annualized projection based on the average monthly revenue earned so far this year.
+            </div>
+            <div class="tooltip-formula">Run_Rate = (YTD_Revenue_Earned / Months_Elapsed) × 12</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">YoY Growth % <span class="info-dot">i</span></div>
+          <div class="kpi-value badge-green" id="val-yoy" style="color:var(--accent-green)">+8.4%</div>
+          <span class="kpi-badge badge-green">↑ Same period</span>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">YoY Growth %</div>
+            <div class="tooltip-def">Percentage change in revenue compared to the same period in the prior year.</div>
+            <div class="tooltip-formula">YoY_Growth = ((Current_Year_Revenue - Previous_Year_Revenue) /
+              Previous_Year_Revenue) × 100</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. REVENUE PERFORMANCE -->
+    <section id="revenue">
+      <div class="section-header">
+        <span class="section-label">Revenue Performance</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="kpi-grid kpi-grid-4" style="margin-bottom:10px">
+
+        <div class="kpi-card">
+          <div class="kpi-label">YTD Revenue Earned <span class="info-dot">i</span></div>
+          <div class="kpi-value large" id="val-ytd-earned">$9.1M</div>
+          <div class="kpi-sub" style="margin-top:10px; margin-bottom:4px">% of Annual Goal</div>
+          <div class="progress-wrap" style="margin-top:0">
+            <div class="progress-track">
+              <div class="progress-fill prog-dark" id="prog-ytd-earned" style="width:61%"></div>
+            </div>
+            <span class="progress-pct" id="pct-ytd-earned">61%</span>
+          </div>
+          <div class="kpi-sub" style="margin-top:10px; margin-bottom:4px">% of YTD Goal</div>
+          <div class="progress-wrap" style="margin-top:0">
+            <div class="progress-track">
+              <div class="progress-fill prog-green" id="prog-ytd-earned-ytd" style="width:91%"></div>
+            </div>
+            <span class="progress-pct" id="pct-ytd-earned-ytd">91%</span>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">YTD Revenue Earned</div>
+            <div class="tooltip-def">Cumulative revenue recognized from January through the selected period.</div>
+            <div class="tooltip-formula">YTD_Revenue_Earned = SUM(Revenue_Amount)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">YTD Revenue Invoiced <span class="info-dot">i</span></div>
+          <div class="kpi-value large" id="val-ytd-invoiced">$8.4M</div>
+          <div class="kpi-sub" style="margin-top:10px; margin-bottom:4px">% of Annual Goal</div>
+          <div class="progress-wrap" style="margin-top:0">
+            <div class="progress-track">
+              <div class="progress-fill prog-blue" id="prog-ytd-invoiced" style="width:56%"></div>
+            </div>
+            <span class="progress-pct" id="pct-ytd-invoiced">56%</span>
+          </div>
+          <div class="kpi-sub" style="margin-top:10px; margin-bottom:4px">% of YTD Goal</div>
+          <div class="progress-wrap" style="margin-top:0">
+            <div class="progress-track">
+              <div class="progress-fill prog-green" id="prog-ytd-invoiced-ytd" style="width:84%"></div>
+            </div>
+            <span class="progress-pct" id="pct-ytd-invoiced-ytd">84%</span>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">YTD Revenue Invoiced</div>
+            <div class="tooltip-def">Total invoice amounts issued from January through the selected period.</div>
+            <div class="tooltip-formula">YTD_Revenue_Invoiced = SUM(Invoice_Amount)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card" style="grid-column: span 2">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Monthly Revenue Trend</div>
+              <div class="chart-subtitle">Revenue Earned vs Invoiced · YTD</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background:var(--accent)"></div>Earned
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background:#c8c3bb"></div>Invoiced
+              </div>
+            </div>
+          </div>
+          <div class="chart-area">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. PIPELINE & SALES EFFECTIVENESS -->
+    <section id="pipeline">
+      <div class="section-header">
+        <span class="section-label">Pipeline &amp; Sales Effectiveness</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="kpi-grid kpi-grid-5">
+
+        <div class="kpi-card">
+          <div class="kpi-label">Pipeline Accumulated <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-pipeline">$42.1M</div>
+          <div class="kpi-sub">Total opportunity value</div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Pipeline Accumulated</div>
+            <div class="tooltip-def">Total value of all active opportunities in the CRM at the selected point in time.
+            </div>
+            <div class="tooltip-formula">Pipeline_Value = SUM(Opportunity_Value)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Pipeline Coverage <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-coverage" style="color:var(--accent-green)">2.8×</div>
+          <span class="kpi-badge badge-green">+0.2 vs target</span>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Pipeline Coverage Ratio</div>
+            <div class="tooltip-def">How many times the pipeline covers the annual unit goal. A ratio above 3× is
+              generally considered healthy.</div>
+            <div class="tooltip-formula">Pipeline_Coverage = Pipeline_Value / Unit_Goal</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Win Rate % <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-winrate">34.2%</div>
+          <span class="kpi-badge badge-red">▼ 1.5% YoY</span>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Win Rate %</div>
+            <div class="tooltip-def">Percentage of closed deals (won + lost) that resulted in a win for the unit.</div>
+            <div class="tooltip-formula">Win_Rate = (Won_Deals / Closed_Deals) × 100
+              Closed_Deals = Won_Deals + Lost_Deals</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Avg Won Deal Size <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-dealsize">$245k</div>
+          <div class="kpi-sub">Per closed-won deal</div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Average Won Deal Size</div>
+            <div class="tooltip-def">Mean revenue value of all deals that were successfully closed as won in the period.
+            </div>
+            <div class="tooltip-formula">Average_Deal_Size = SUM(Won_Deal_Value) / COUNT(Won_Deals)</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">New vs Existing <span class="info-dot">i</span></div>
+          <div class="kpi-value small" id="val-newexist">40 / 60</div>
+          <div class="ratio-bar">
+            <div class="ratio-a" style="width:40%"></div>
+            <div class="ratio-b" style="width:60%"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px">
+            <span style="font-size:11px;color:var(--text-muted)">New</span>
+            <span style="font-size:11px;color:var(--text-muted)">Existing</span>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">New vs Existing Business Ratio</div>
+            <div class="tooltip-def">Revenue mix between new customers acquired in the period vs. existing customers.
+            </div>
+            <div class="tooltip-formula">New_Business_Ratio = Revenue_New_Customers / Total_Revenue</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. PROFITABILITY & PRODUCTIVITY -->
+    <section id="profitability">
+      <div class="section-header">
+        <span class="section-label">Profitability &amp; Productivity</span>
+        <div class="section-line"></div>
+      </div>
+      <div class="kpi-grid kpi-grid-4">
+
+        <div class="kpi-card">
+          <div class="kpi-label">YTD Gross Margin <span class="info-dot">i</span></div>
+          <div class="kpi-value large" id="val-gm">$2.84M</div>
+          <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size:13px; font-weight:600; color:var(--accent-green)" id="val-gm-yoy">+$340k</span>
+            <span style="font-size:12px; font-weight:500; color:var(--text-secondary)">YoY Growth</span>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Gross Margin</div>
+            <div class="tooltip-def">Absolute profit remaining after subtracting cost of delivery from revenue.</div>
+            <div class="tooltip-formula">Gross_Margin = Revenue - Cost_of_Delivery</div>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">YTD Gross Margin % <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-gm-pct" style="color:var(--accent-green)">31.2%</div>
+          <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size:13px; font-weight:600; color:var(--accent-green)">+4.5%</span>
+            <span style="font-size:12px; font-weight:500; color:var(--text-secondary)">YoY Growth</span>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Gross Margin %</div>
+            <div class="tooltip-def">Margin as a percentage of revenue — key indicator of delivery efficiency.</div>
+            <div class="tooltip-formula">Gross_Margin% = ((Revenue - Cost_of_Delivery) / Revenue) × 100</div>
+          </div>
+        </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Margin / Project <span class="info-dot">i</span></div>
+        <div class="kpi-value" id="val-avg-margin">$18.2k</div>
+        <div class="progress-wrap">
+          <div class="progress-track">
+            <div class="progress-fill prog-dark" style="width:72%"></div>
+          </div>
+          <span class="progress-pct">72%</span>
+        </div>
+        <div class="tooltip">
+          <div class="tooltip-tag">Metric</div>
+          <div class="tooltip-name">Average Margin per Project</div>
+          <div class="tooltip-def">Mean profit contribution across all completed projects in the selected period.</div>
+          <div class="tooltip-formula">Avg_Margin_Per_Project = SUM(Project_Margin) / COUNT(Completed_Projects)</div>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label" style="margin-bottom:10px">Revenue per FTE <span class="info-dot">i</span></div>
+        <div class="kpi-value large" id="val-rev-fte">$312k</div>
+
+        <div class="tooltip">
+          <div class="tooltip-tag">Metric</div>
+          <div class="tooltip-name">Revenue per FTE</div>
+          <div class="tooltip-def">Total revenue generated divided by total full-time equivalent employees. Measures
+            workforce revenue efficiency.</div>
+          <div class="tooltip-formula">Revenue_Per_FTE = Total_Revenue / Total_Full_Time_Employees</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  </main>
+
+  <footer>
+    <span>I&amp;B Unit Performance Dashboard · Innovation &amp; Business</span>
+    <span>© 2026 All rights reserved</span>
+  </footer>
+
+  <script>
+    // ── CHART ────────────────────────────────────────────────────────────────────
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    const baseEarned = [820, 910, 1050, 980, 1120, 1280, 1050, 970, 1100, 900, 0, 0];
+    const baseInvoiced = [760, 860, 980, 900, 1050, 1200, 980, 920, 1020, 830, 0, 0];
+
+    function buildChart(earned, invoiced) {
+      const ctx = document.getElementById('revenueChart');
+      if (window._revChart) window._revChart.destroy();
+      window._revChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: months,
+          datasets: [
+            {
+              label: 'Earned',
+              data: earned,
+              backgroundColor: '#1a1916',
+              borderRadius: 3,
+              borderSkipped: false,
+              barThickness: 10,
+            },
+            {
+              label: 'Invoiced',
+              data: invoiced,
+              backgroundColor: '#d6d2cb',
+              borderRadius: 3,
+              borderSkipped: false,
+              barThickness: 10,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1a1916',
+              titleColor: '#f9fafb',
+              bodyColor: '#d1d5db',
+              padding: 10,
+              cornerRadius: 6,
+              callbacks: {
+                label: ctx => ` ${ctx.dataset.label}: $${ctx.parsed.y}k`
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              border: { display: false },
+              ticks: { font: { family: 'DM Sans', size: 11 }, color: '#a8a49e' }
+            },
+            y: {
+              grid: { color: '#f0eeea', drawBorder: false },
+              border: { display: false, dash: [4, 4] },
+              ticks: {
+                font: { family: 'DM Sans', size: 11 },
+                color: '#a8a49e',
+                callback: v => v ? `$${v}k` : ''
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // ── FILTER LOGIC ─────────────────────────────────────────────────────────────
+    const kpiData = {
+      '2026-all-all': { goal: '$15.0M', forecast: '$14.2M', runrate: '$13.6M', yoy: '+8.4%', ytdE: '$9.1M', pctE: 61, pctEYtd: 91, ytdI: '$8.4M', pctI: 56, pctIYtd: 84, pipeline: '$42.1M', coverage: '2.8×', winrate: '34.2%', dealsize: '$245k', gm: '$2.84M', gmPct: '31.2%', gmYoy: '+$340k', avgMargin: '$18.2k', revFte: '$312k', fteT: 29, fteB: 24, fteS: 5, yoyColor: 'green', coverageColor: 'green', winColor: 'red', gmPctColor: 'green', gmYoyColor: 'green' },
+      '2026-all-bu1': { goal: '$6.0M', forecast: '$5.8M', runrate: '$5.5M', yoy: '+9.1%', ytdE: '$3.7M', pctE: 62, pctEYtd: 92, ytdI: '$3.4M', pctI: 57, pctIYtd: 85, pipeline: '$18.0M', coverage: '3.0×', winrate: '37.5%', dealsize: '$280k', gm: '$1.2M', gmPct: '32.4%', gmYoy: '+$155k', avgMargin: '$20.1k', revFte: '$320k', fteT: 12, fteB: 10, fteS: 2, yoyColor: 'green', coverageColor: 'green', winColor: 'green', gmPctColor: 'green', gmYoyColor: 'green' },
+      '2026-all-bu2': { goal: '$5.0M', forecast: '$4.6M', runrate: '$4.4M', yoy: '+6.2%', ytdE: '$2.9M', pctE: 58, pctEYtd: 87, ytdI: '$2.7M', pctI: 54, pctIYtd: 81, pipeline: '$13.5M', coverage: '2.7×', winrate: '31.0%', dealsize: '$210k', gm: '$0.9M', gmPct: '30.2%', gmYoy: '+$95k', avgMargin: '$15.5k', revFte: '$290k', fteT: 10, fteB: 8, fteS: 2, yoyColor: 'green', coverageColor: 'amber', winColor: 'red', gmPctColor: 'green', gmYoyColor: 'green' },
+      '2026-all-bu3': { goal: '$4.0M', forecast: '$3.8M', runrate: '$3.7M', yoy: '+11.0%', ytdE: '$2.5M', pctE: 63, pctEYtd: 94, ytdI: '$2.3M', pctI: 58, pctIYtd: 86, pipeline: '$10.6M', coverage: '2.7×', winrate: '33.3%', dealsize: '$190k', gm: '$0.74M', gmPct: '29.7%', gmYoy: '+$90k', avgMargin: '$14.8k', revFte: '$305k', fteT: 7, fteB: 6, fteS: 1, yoyColor: 'green', coverageColor: 'amber', winColor: 'red', gmPctColor: 'amber', gmYoyColor: 'green' },
+    };
+
+    function getKey() {
+      const y = document.getElementById('filterYear').value;
+      const m = document.getElementById('filterMonth').value;
+      const b = document.getElementById('filterBU').value;
+      const key = `${y}-all-${b}`;
+      return kpiData[key] || kpiData['2026-all-all'];
+    }
+
+    function setVal(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+    function setColor(id, color) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const map = { green: 'var(--accent-green)', red: 'var(--accent-red)', amber: 'var(--accent-amber)', neutral: 'var(--text-primary)' };
+      el.style.color = map[color] || 'var(--text-primary)';
+    }
+
+    function updateDashboard() {
+      const d = getKey();
+      setVal('val-unit-goal', d.goal);
+      setVal('val-forecast', d.forecast);
+      setVal('val-runrate', d.runrate);
+      setVal('val-yoy', d.yoy); setColor('val-yoy', d.yoyColor);
+      setVal('val-ytd-earned', d.ytdE);
+      setVal('val-ytd-invoiced', d.ytdI);
+      setVal('val-pipeline', d.pipeline);
+      setVal('val-coverage', d.coverage); setColor('val-coverage', d.coverageColor);
+      setVal('val-winrate', d.winrate); setColor('val-winrate', d.winColor);
+      setVal('val-dealsize', d.dealsize);
+      setVal('val-gm', d.gm);
+      setVal('val-gm-pct', d.gmPct); setColor('val-gm-pct', d.gmPctColor);
+      setVal('val-gm-yoy', d.gmYoy); setColor('val-gm-yoy', d.gmYoyColor);
+      setVal('val-avg-margin', d.avgMargin);
+      setVal('val-rev-fte', d.revFte);
+      setVal('val-fte-total', d.fteT);
+      setVal('val-fte-billable', d.fteB);
+      setVal('val-fte-support', d.fteS);
+
+      // progress bars
+      const ep = document.getElementById('prog-ytd-earned');
+      const ip = document.getElementById('prog-ytd-invoiced');
+      const epc = document.getElementById('pct-ytd-earned');
+      const ipc = document.getElementById('pct-ytd-invoiced');
+      const epy = document.getElementById('prog-ytd-earned-ytd');
+      const epyc = document.getElementById('pct-ytd-earned-ytd');
+      const ipy = document.getElementById('prog-ytd-invoiced-ytd');
+      const ipyc = document.getElementById('pct-ytd-invoiced-ytd');
+
+      if (ep) { ep.style.width = d.pctE + '%'; epc.textContent = d.pctE + '%'; }
+      if (ip) { ip.style.width = d.pctI + '%'; ipc.textContent = d.pctI + '%'; }
+      if (epy) { epy.style.width = (d.pctEYtd || 0) + '%'; epyc.textContent = (d.pctEYtd || 0) + '%'; }
+      if (ipy) { ipy.style.width = (d.pctIYtd || 0) + '%'; ipyc.textContent = (d.pctIYtd || 0) + '%'; }
+
+      // chart: scale based on BU
+      const scale = d.fteT / 29;
+      const earned = baseEarned.map(v => v ? Math.round(v * scale) : 0);
+      const invoiced = baseInvoiced.map(v => v ? Math.round(v * scale) : 0);
+      buildChart(earned, invoiced);
+    }
+
+    function resetFilters() {
+      document.getElementById('filterYear').value = '2026';
+      document.getElementById('filterMonth').value = 'all';
+      document.getElementById('filterBU').value = 'all';
+      updateDashboard();
+    }
+
+    updateDashboard();
+
+    // ── TOOLTIP POSITIONING ──────────────────────────────────────────────────────
+    document.querySelectorAll('.kpi-card').forEach(card => {
+      const tooltip = card.querySelector('.tooltip');
+      if (!tooltip) return;
+
+      card.addEventListener('mouseenter', () => {
+        // Show tooltip temporarily to measure it
+        tooltip.style.display = 'block';
+        tooltip.style.opacity = '0';
+        tooltip.style.top = 'auto';
+        tooltip.style.left = 'auto';
+        tooltip.classList.remove('tooltip-up', 'tooltip-left-shift');
+
+        const cardRect = card.getBoundingClientRect();
+        const ttRect = tooltip.getBoundingClientRect();
+        
+        let top = cardRect.height + 8;
+        let left = 0;
+
+        // Check window boundaries
+        if (cardRect.bottom + ttRect.height + 8 > window.innerHeight) {
+          // If it overflows bottom, move it above the card
+          top = -(ttRect.height + 8);
+          tooltip.classList.add('tooltip-up');
+        }
+
+        if (cardRect.left + ttRect.width > window.innerWidth) {
+          // If it overflows right, shift it to the left side
+          left = cardRect.width - ttRect.width;
+          tooltip.classList.add('tooltip-left-shift');
+        }
+
+        tooltip.style.top = top + 'px';
+        tooltip.style.left = left + 'px';
+        tooltip.style.opacity = '1';
+      });
+
+      card.addEventListener('mouseleave', () => {
+        tooltip.style.display = 'none';
+      });
+    });
+  </script>
+
+</body>
+
+</html>
