@@ -19,44 +19,105 @@
     }
 
     :root {
-      --bg: #f5f4f1;
+      /* Linear-Inspired Light Theme */
+      --bg: #f7f8f8;
       --surface: #ffffff;
-      --surface-2: #f0eeea;
-      --border: #e2dfd8;
-      --text-primary: #1a1916;
-      --text-secondary: #6b6860;
-      --text-muted: #a8a49e;
-      --accent: #1a1916;
-      --accent-green: #1a7a4a;
-      --accent-red: #b83232;
-      --accent-amber: #c47b00;
-      --accent-blue: #1d5fa8;
-      --tag-green-bg: #ecf7f1;
-      --tag-green-text: #1a7a4a;
-      --tag-red-bg: #fdf0f0;
-      --tag-red-text: #b83232;
-      --tag-blue-bg: #edf4fc;
-      --tag-blue-text: #1d5fa8;
-      --font: 'DM Sans', sans-serif;
-      --mono: 'DM Mono', monospace;
-      --radius: 10px;
+      --surface-2: #f3f4f5;
+      --border: rgba(0,0,0,0.08); /* Linear Light Border Standard */
+      --text-primary: #111315;
+      --text-secondary: #5e6166;
+      --text-muted: #8a8f98;
+      --accent: #5e6ad2;
+      
+      /* Semantic tags */
+      --accent-green: #27a644;
+      --accent-red: #dc2626;
+      --accent-amber: #d97706;
+      --accent-blue: #5e6ad2;
+      
+      --tag-green-bg: background: transparent;
+      --tag-green-text: #27a644;
+      
+      --tag-red-bg: transparent;
+      --tag-red-text: #dc2626;
+      
+      --tag-blue-bg: transparent;
+      --tag-blue-text: #5e6ad2;
+      
+      --font: 'Inter Variable', 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+      --mono: 'Berkeley Mono', ui-monospace, Menlo, monospace;
+      
+      --radius: 8px;
       --radius-sm: 6px;
-      --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+      --shadow: rgba(0,0,0,0.04) 0px 1px 2px, rgba(0,0,0,0.02) 0px 0px 0px 1px;
+      --shadow-md: rgba(0,0,0,0.06) 0px 4px 8px, rgba(0,0,0,0.03) 0px 0px 0px 1px;
     }
 
     body {
       font-family: var(--font);
       background: var(--bg);
       color: var(--text-primary);
+      font-feature-settings: "cv01", "ss03";
       font-size: 14px;
       line-height: 1.5;
       min-height: 100vh;
     }
 
+    
+    /* MULTI-SELECT CSS */
+    .custom-select {
+      position: relative;
+      font-family: var(--font);
+    }
+    .select-selected {
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 28px 6px 10px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235e6166' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      min-width: 120px;
+      user-select: none;
+    }
+    .select-items {
+      position: absolute;
+      background-color: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      max-height: 250px;
+      overflow-y: auto;
+      box-shadow: var(--shadow-md);
+      margin-top: 4px;
+      padding: 4px;
+    }
+    .select-hide {
+      display: none;
+    }
+    .select-items label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      font-size: 13px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .select-items label:hover {
+      background-color: #ffffff;
+    }
+
     /* HEADER */
     header {
-      background: var(--surface);
+      background: #ffffff;
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
@@ -85,7 +146,7 @@
     .logo-mark {
       width: 28px;
       height: 28px;
-      background: var(--accent);
+      background: transparent;
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -95,7 +156,7 @@
     .logo-mark svg {
       width: 14px;
       height: 14px;
-      fill: white;
+      fill: #111315;
     }
 
     .header-nav {
@@ -156,7 +217,7 @@
 
     /* FILTERS */
     .filters-bar {
-      background: var(--surface);
+      background: #ffffff;
       border-bottom: 1px solid var(--border);
     }
 
@@ -189,7 +250,7 @@
       border-radius: var(--radius-sm);
       padding: 6px 28px 6px 10px;
       appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6860' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235e6166' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 8px center;
       cursor: pointer;
@@ -282,14 +343,18 @@
 
     /* KPI CARD */
     .kpi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.12);
       border-radius: var(--radius);
       padding: 18px 20px;
       position: relative;
       cursor: default;
       transition: border-color 0.15s, box-shadow 0.15s;
-      box-shadow: var(--shadow);
+      box-shadow: rgba(0,0,0,0.08) 0px 4px 12px, rgba(0,0,0,0.04) 0px 1px 3px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     .kpi-card:hover {
@@ -312,6 +377,9 @@
     .kpi-label .info-dot {
       width: 14px;
       height: 14px;
+      background: var(--surface-2);
+      border: none;
+      color: var(--text-primary);
       border: 1px solid var(--border);
       border-radius: 50%;
       display: inline-flex;
@@ -327,15 +395,17 @@
     .kpi-value {
       font-family: var(--font);
       font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+      font-weight: 510;
+      letter-spacing: -0.704px;
       color: var(--text-primary);
       line-height: 1;
       margin-bottom: 6px;
     }
 
     .kpi-value.large {
-      font-size: 36px;
+      font-size: 40px;
+      font-weight: 510;
+      letter-spacing: -1.056px;
     }
 
     .kpi-value.small {
@@ -346,10 +416,11 @@
       display: inline-flex;
       align-items: center;
       gap: 3px;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      padding: 2px 7px;
-      border-radius: 4px;
+      padding: 4px 8px;
+      border-radius: 9999px;
+      letter-spacing: 0.125px;
     }
 
     .badge-green {
@@ -363,7 +434,7 @@
     }
 
     .badge-amber {
-      background: #fef9ec;
+      background: transparent; border: 1px solid rgba(0,0,0,0.08);
       color: var(--accent-amber);
     }
 
@@ -435,7 +506,7 @@
       position: absolute;
       z-index: 200;
       width: 320px;
-      background: var(--text-primary);
+      background: transparent;
       border-radius: var(--radius);
       padding: 16px;
       box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
@@ -449,7 +520,7 @@
       left: 20px;
       width: 10px;
       height: 10px;
-      background: var(--text-primary);
+      background: transparent;
       transform: rotate(45deg);
       border-radius: 2px;
     }
@@ -500,11 +571,11 @@
 
     /* CHART CARD */
     .chart-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: #ffffff;
+      border: 1px solid rgba(0,0,0,0.12);
       border-radius: var(--radius);
       padding: 22px 24px;
-      box-shadow: var(--shadow);
+      box-shadow: rgba(0,0,0,0.08) 0px 4px 12px, rgba(0,0,0,0.04) 0px 1px 3px;
     }
 
     .chart-header {
@@ -670,21 +741,25 @@
         <option value="2025">2025</option>
         <option value="2024">2024</option>
       </select>
-      <select id="filterMonth" onchange="updateDashboard()">
-        <option value="all">All Months</option>
-        <option value="1">January</option>
-        <option value="2">February</option>
-        <option value="3">March</option>
-        <option value="4">April</option>
-        <option value="5">May</option>
-        <option value="6">June</option>
-        <option value="7">July</option>
-        <option value="8">August</option>
-        <option value="9">September</option>
-        <option value="10">October</option>
-        <option value="11">November</option>
-        <option value="12">December</option>
-      </select>
+      <!-- CHANGE 7: Month Filter Improvement UI -->
+      <div class="custom-select" id="monthFilterContainer">
+        <div class="select-selected" id="monthSelectText" onclick="toggleOptionSelect()">All Months</div>
+        <div class="select-items select-hide" id="monthOptions">
+          <label><input type="checkbox" value="all" checked onchange="handleMonthChange(this)"> All Months</label>
+          <label><input type="checkbox" value="1" onchange="handleMonthChange(this)"> January</label>
+          <label><input type="checkbox" value="2" onchange="handleMonthChange(this)"> February</label>
+          <label><input type="checkbox" value="3" onchange="handleMonthChange(this)"> March</label>
+          <label><input type="checkbox" value="4" onchange="handleMonthChange(this)"> April</label>
+          <label><input type="checkbox" value="5" onchange="handleMonthChange(this)"> May</label>
+          <label><input type="checkbox" value="6" onchange="handleMonthChange(this)"> June</label>
+          <label><input type="checkbox" value="7" onchange="handleMonthChange(this)"> July</label>
+          <label><input type="checkbox" value="8" onchange="handleMonthChange(this)"> August</label>
+          <label><input type="checkbox" value="9" onchange="handleMonthChange(this)"> September</label>
+          <label><input type="checkbox" value="10" onchange="handleMonthChange(this)"> October</label>
+          <label><input type="checkbox" value="11" onchange="handleMonthChange(this)"> November</label>
+          <label><input type="checkbox" value="12" onchange="handleMonthChange(this)"> December</label>
+        </div>
+      </div>
       <select id="filterBU" onchange="updateDashboard()">
         <option value="all">All Business Units</option>
         <option value="bu1">BU — Technology</option>
@@ -704,7 +779,8 @@
         <span class="section-label">Strategic Targets</span>
         <div class="section-line"></div>
       </div>
-      <div class="kpi-grid kpi-grid-4">
+      <!-- CHANGE 4: Upgrade to 5 columns -->
+      <div class="kpi-grid kpi-grid-5">
 
         <div class="kpi-card">
           <div class="kpi-label">Unit Goal <span class="info-dot">i</span></div>
@@ -758,6 +834,22 @@
           </div>
         </div>
 
+        <!-- CHANGE 4: Moved YTD Gross Margin % here -->
+        <div class="kpi-card">
+          <div class="kpi-label">YTD Gross Margin % <span class="info-dot">i</span></div>
+          <div class="kpi-value" id="val-gm-pct" style="color:var(--accent-green)">31.2%</div>
+          <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size:13px; font-weight:600; color:var(--accent-green)">+4.5%</span>
+            <span style="font-size:12px; font-weight:500; color:var(--text-secondary)">YoY Growth</span>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-tag">Metric</div>
+            <div class="tooltip-name">Gross Margin %</div>
+            <div class="tooltip-def">Margin as a percentage of revenue — key indicator of delivery efficiency.</div>
+            <div class="tooltip-formula">Gross_Margin% = ((Revenue - Cost_of_Delivery) / Revenue) × 100</div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -767,7 +859,8 @@
         <span class="section-label">Revenue Performance</span>
         <div class="section-line"></div>
       </div>
-      <div class="kpi-grid kpi-grid-4" style="margin-bottom:10px">
+      <!-- CHANGE 6: Update grid to rebalance layout -->
+      <div class="kpi-grid kpi-grid-3" style="margin-bottom:10px">
 
         <div class="kpi-card">
           <div class="kpi-label">YTD Revenue Earned <span class="info-dot">i</span></div>
@@ -794,43 +887,22 @@
           </div>
         </div>
 
-        <div class="kpi-card">
-          <div class="kpi-label">YTD Revenue Invoiced <span class="info-dot">i</span></div>
-          <div class="kpi-value large" id="val-ytd-invoiced">$8.4M</div>
-          <div class="kpi-sub" style="margin-top:10px; margin-bottom:4px">% of Annual Goal</div>
-          <div class="progress-wrap" style="margin-top:0">
-            <div class="progress-track">
-              <div class="progress-fill prog-blue" id="prog-ytd-invoiced" style="width:56%"></div>
-            </div>
-            <span class="progress-pct" id="pct-ytd-invoiced">56%</span>
-          </div>
-          <div class="kpi-sub" style="margin-top:10px; margin-bottom:4px">% of YTD Goal</div>
-          <div class="progress-wrap" style="margin-top:0">
-            <div class="progress-track">
-              <div class="progress-fill prog-green" id="prog-ytd-invoiced-ytd" style="width:84%"></div>
-            </div>
-            <span class="progress-pct" id="pct-ytd-invoiced-ytd">84%</span>
-          </div>
-          <div class="tooltip">
-            <div class="tooltip-tag">Metric</div>
-            <div class="tooltip-name">YTD Revenue Invoiced</div>
-            <div class="tooltip-def">Total invoice amounts issued from January through the selected period.</div>
-            <div class="tooltip-formula">YTD_Revenue_Invoiced = SUM(Invoice_Amount)</div>
-          </div>
-        </div>
+<!-- CHANGE 6: Removed YTD Revenue Invoiced -->
 
         <div class="kpi-card" style="grid-column: span 2">
           <div class="chart-header">
             <div>
               <div class="chart-title">Monthly Revenue Trend</div>
-              <div class="chart-subtitle">Revenue Earned vs Invoiced · YTD</div>
+              <!-- CHANGE 1: Subtitle update -->
+              <div class="chart-subtitle">Monthly Earned Revenue Trend vs Last Year</div>
             </div>
             <div class="chart-legend">
               <div class="legend-item">
-                <div class="legend-dot" style="background:var(--accent)"></div>Earned
+                <!-- CHANGE 1: Legend update -->
+                <div class="legend-dot" style="background:#111315"></div>Current Year
               </div>
               <div class="legend-item">
-                <div class="legend-dot" style="background:#c8c3bb"></div>Invoiced
+                <div class="legend-dot" style="background:rgba(0,0,0,0.15)"></div>Last Year
               </div>
             </div>
           </div>
@@ -866,7 +938,7 @@
         <div class="kpi-card">
           <div class="kpi-label">Pipeline Coverage <span class="info-dot">i</span></div>
           <div class="kpi-value" id="val-coverage" style="color:var(--accent-green)">2.8×</div>
-          <span class="kpi-badge badge-green">+0.2 vs target</span>
+          <!-- CHANGE 2: Removed +0.2 vs target badge -->
           <div class="tooltip">
             <div class="tooltip-tag">Metric</div>
             <div class="tooltip-name">Pipeline Coverage Ratio</div>
@@ -903,7 +975,8 @@
         </div>
 
         <div class="kpi-card">
-          <div class="kpi-label">New vs Existing <span class="info-dot">i</span></div>
+          <!-- CHANGE 3: Label update -->
+          <div class="kpi-label">New vs Existing Business <span class="info-dot">i</span></div>
           <div class="kpi-value small" id="val-newexist">40 / 60</div>
           <div class="ratio-bar">
             <div class="ratio-a" style="width:40%"></div>
@@ -948,30 +1021,23 @@
           </div>
         </div>
 
+
+        <!-- CHANGE 4: Add Contribution Margin -->
         <div class="kpi-card">
-          <div class="kpi-label">YTD Gross Margin % <span class="info-dot">i</span></div>
-          <div class="kpi-value" id="val-gm-pct" style="color:var(--accent-green)">31.2%</div>
-          <div style="margin-top: 10px; display: flex; align-items: center; gap: 8px;">
-            <span style="font-size:13px; font-weight:600; color:var(--accent-green)">+4.5%</span>
-            <span style="font-size:12px; font-weight:500; color:var(--text-secondary)">YoY Growth</span>
-          </div>
+          <div class="kpi-label">Contribution Margin <span class="info-dot">i</span></div>
+          <div class="kpi-value large" id="val-cm" style="color:var(--text-primary)">42.5%</div>
           <div class="tooltip">
             <div class="tooltip-tag">Metric</div>
-            <div class="tooltip-name">Gross Margin %</div>
-            <div class="tooltip-def">Margin as a percentage of revenue — key indicator of delivery efficiency.</div>
-            <div class="tooltip-formula">Gross_Margin% = ((Revenue - Cost_of_Delivery) / Revenue) × 100</div>
+            <div class="tooltip-name">Contribution Margin</div>
+            <div class="tooltip-def">Measures revenue remaining after direct delivery and attributable costs.</div>
+            <div class="tooltip-formula">Contribution_Margin = ((Revenue - Direct_Costs) / Revenue) × 100</div>
           </div>
         </div>
 
+      <!-- CHANGE 5: Avg Margin per project progress bar removed -->
       <div class="kpi-card">
         <div class="kpi-label">Avg Margin / Project <span class="info-dot">i</span></div>
-        <div class="kpi-value" id="val-avg-margin">$18.2k</div>
-        <div class="progress-wrap">
-          <div class="progress-track">
-            <div class="progress-fill prog-dark" style="width:72%"></div>
-          </div>
-          <span class="progress-pct">72%</span>
-        </div>
+        <div class="kpi-value large" id="val-avg-margin">$18.2k</div>
         <div class="tooltip">
           <div class="tooltip-tag">Metric</div>
           <div class="tooltip-name">Average Margin per Project</div>
@@ -999,7 +1065,7 @@
   </main>
 
   <footer>
-    <span>I&amp;B Unit Performance Dashboard · Innovation &amp; Business</span>
+    <span>I&amp;B Unit Performance Dashboard · Insurance &amp; Banking</span>
     <span>© 2026 All rights reserved</span>
   </footer>
 
@@ -1007,10 +1073,11 @@
     // ── CHART ────────────────────────────────────────────────────────────────────
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    const baseEarned = [820, 910, 1050, 980, 1120, 1280, 1050, 970, 1100, 900, 0, 0];
-    const baseInvoiced = [760, 860, 980, 900, 1050, 1200, 980, 920, 1020, 830, 0, 0];
+    // CHANGE 1: New dataset and updated parameters for chart
+    const baseEarned = [820, 890, 950, 920, 1050, 1120, 1080, 1150, 1220, 1180, 1300, 1420];
+    const baseEarnedLY = [750, 810, 880, 850, 970, 1020, 990, 1050, 1110, 1080, 1180, 1250];
 
-    function buildChart(earned, invoiced) {
+    function buildChart(currentYear, lastYear) {
       const ctx = document.getElementById('revenueChart');
       if (window._revChart) window._revChart.destroy();
       window._revChart = new Chart(ctx, {
@@ -1019,18 +1086,18 @@
           labels: months,
           datasets: [
             {
-              label: 'Earned',
-              data: earned,
-              backgroundColor: '#1a1916',
-              borderRadius: 3,
+              label: 'Current Year',
+              data: currentYear,
+              backgroundColor: '#111315',
+              borderRadius: 4,
               borderSkipped: false,
               barThickness: 10,
             },
             {
-              label: 'Invoiced',
-              data: invoiced,
-              backgroundColor: '#d6d2cb',
-              borderRadius: 3,
+              label: 'Last Year',
+              data: lastYear,
+              backgroundColor: 'rgba(0,0,0,0.15)',
+              borderRadius: 4,
               borderSkipped: false,
               barThickness: 10,
             }
@@ -1042,9 +1109,11 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#1a1916',
-              titleColor: '#f9fafb',
-              bodyColor: '#d1d5db',
+              backgroundColor: '#ffffff',
+              borderColor: 'rgba(0,0,0,0.08)',
+              borderWidth: 1,
+              titleColor: '#111315',
+              bodyColor: '#5e6166',
               padding: 10,
               cornerRadius: 6,
               callbacks: {
@@ -1056,14 +1125,14 @@
             x: {
               grid: { display: false },
               border: { display: false },
-              ticks: { font: { family: 'DM Sans', size: 11 }, color: '#a8a49e' }
+              ticks: { font: { family: 'Inter Variable' }, color: '#8a8f98' }
             },
             y: {
-              grid: { color: '#f0eeea', drawBorder: false },
+              grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
               border: { display: false, dash: [4, 4] },
               ticks: {
-                font: { family: 'DM Sans', size: 11 },
-                color: '#a8a49e',
+                font: { family: 'Inter Variable' },
+                color: '#8a8f98',
                 callback: v => v ? `$${v}k` : ''
               }
             }
@@ -1072,7 +1141,54 @@
       });
     }
 
+    
     // ── FILTER LOGIC ─────────────────────────────────────────────────────────────
+    // CHANGE 7 & 8: Month filter interaction & aggregation logic
+    function toggleOptionSelect() {
+      document.getElementById("monthOptions").classList.toggle("select-hide");
+    }
+
+    document.addEventListener("click", function (e) {
+      const container = document.getElementById("monthFilterContainer");
+      if (container && !container.contains(e.target)) {
+        document.getElementById("monthOptions").classList.add("select-hide");
+      }
+    });
+
+    let selectedMonths = ['all'];
+
+    function handleMonthChange(checkbox) {
+      const val = checkbox.value;
+      const checkboxes = document.querySelectorAll('#monthOptions input');
+      
+      if (val === 'all') {
+        if (checkbox.checked) {
+          selectedMonths = ['all'];
+          checkboxes.forEach(cb => { if (cb.value !== 'all') cb.checked = false; });
+        } else {
+          checkbox.checked = true; // Prevent unchecking all
+        }
+      } else {
+        const allCb = Array.from(checkboxes).find(cb => cb.value === 'all');
+        if (checkbox.checked) {
+          allCb.checked = false;
+          selectedMonths = selectedMonths.filter(m => m !== 'all');
+          selectedMonths.push(val);
+        } else {
+          selectedMonths = selectedMonths.filter(m => m !== val);
+          if (selectedMonths.length === 0) {
+            allCb.checked = true;
+            selectedMonths = ['all'];
+          }
+        }
+      }
+      
+      const text = selectedMonths.includes('all') ? 'All Months' : (selectedMonths.length === 1 ? 'Month ' + selectedMonths[0] : selectedMonths.length + ' Months');
+      document.getElementById('monthSelectText').textContent = text;
+      
+      updateDashboard();
+    }
+
     const kpiData = {
       '2026-all-all': { goal: '$15.0M', forecast: '$14.2M', runrate: '$13.6M', yoy: '+8.4%', ytdE: '$9.1M', pctE: 61, pctEYtd: 91, ytdI: '$8.4M', pctI: 56, pctIYtd: 84, pipeline: '$42.1M', coverage: '2.8×', winrate: '34.2%', dealsize: '$245k', gm: '$2.84M', gmPct: '31.2%', gmYoy: '+$340k', avgMargin: '$18.2k', revFte: '$312k', fteT: 29, fteB: 24, fteS: 5, yoyColor: 'green', coverageColor: 'green', winColor: 'red', gmPctColor: 'green', gmYoyColor: 'green' },
       '2026-all-bu1': { goal: '$6.0M', forecast: '$5.8M', runrate: '$5.5M', yoy: '+9.1%', ytdE: '$3.7M', pctE: 62, pctEYtd: 92, ytdI: '$3.4M', pctI: 57, pctIYtd: 85, pipeline: '$18.0M', coverage: '3.0×', winrate: '37.5%', dealsize: '$280k', gm: '$1.2M', gmPct: '32.4%', gmYoy: '+$155k', avgMargin: '$20.1k', revFte: '$320k', fteT: 12, fteB: 10, fteS: 2, yoyColor: 'green', coverageColor: 'green', winColor: 'green', gmPctColor: 'green', gmYoyColor: 'green' },
@@ -1082,7 +1198,6 @@
 
     function getKey() {
       const y = document.getElementById('filterYear').value;
-      const m = document.getElementById('filterMonth').value;
       const b = document.getElementById('filterBU').value;
       const key = `${y}-all-${b}`;
       return kpiData[key] || kpiData['2026-all-all'];
@@ -1098,13 +1213,33 @@
 
     function updateDashboard() {
       const d = getKey();
+      
+      // CHANGE 8: Aggregation logic for selected months
+      let scaleFactor = 1;
+      let monthFactor = 1;
+      
+      if (!selectedMonths.includes('all')) {
+        let totalBaseEarned = baseEarned.slice(0, 10).reduce((a, b) => a + b, 0); // Active months
+        let selectedBaseEarned = selectedMonths.reduce((sum, m) => sum + baseEarned[parseInt(m) - 1], 0);
+        if (totalBaseEarned > 0) {
+          monthFactor = selectedBaseEarned / totalBaseEarned;
+        }
+      }
+      
+      // We scale raw volume KPIs using the monthFactor
+      const rawEarnedObj = parseFloat(d.ytdE.replace('$', '').replace('M', '')) * monthFactor;
+      const fmtEarned = '$' + rawEarnedObj.toFixed(1) + 'M';
+      
+      const rawPipelineObj = parseFloat(d.pipeline.replace('$', '').replace('M', '')) * monthFactor;
+      const fmtPipeline = '$' + rawPipelineObj.toFixed(1) + 'M';
+
       setVal('val-unit-goal', d.goal);
       setVal('val-forecast', d.forecast);
-      setVal('val-runrate', d.runrate);
+      setVal('val-runrate', d.runrate); // Run rate stays same or similar, keep static for simplicity
       setVal('val-yoy', d.yoy); setColor('val-yoy', d.yoyColor);
-      setVal('val-ytd-earned', d.ytdE);
-      setVal('val-ytd-invoiced', d.ytdI);
-      setVal('val-pipeline', d.pipeline);
+      setVal('val-ytd-earned', fmtEarned);
+      // setVal('val-ytd-invoiced', d.ytdI); // Removed
+      setVal('val-pipeline', fmtPipeline);
       setVal('val-coverage', d.coverage); setColor('val-coverage', d.coverageColor);
       setVal('val-winrate', d.winrate); setColor('val-winrate', d.winColor);
       setVal('val-dealsize', d.dealsize);
@@ -1119,29 +1254,36 @@
 
       // progress bars
       const ep = document.getElementById('prog-ytd-earned');
-      const ip = document.getElementById('prog-ytd-invoiced');
       const epc = document.getElementById('pct-ytd-earned');
-      const ipc = document.getElementById('pct-ytd-invoiced');
       const epy = document.getElementById('prog-ytd-earned-ytd');
       const epyc = document.getElementById('pct-ytd-earned-ytd');
-      const ipy = document.getElementById('prog-ytd-invoiced-ytd');
-      const ipyc = document.getElementById('pct-ytd-invoiced-ytd');
 
-      if (ep) { ep.style.width = d.pctE + '%'; epc.textContent = d.pctE + '%'; }
-      if (ip) { ip.style.width = d.pctI + '%'; ipc.textContent = d.pctI + '%'; }
-      if (epy) { epy.style.width = (d.pctEYtd || 0) + '%'; epyc.textContent = (d.pctEYtd || 0) + '%'; }
-      if (ipy) { ipy.style.width = (d.pctIYtd || 0) + '%'; ipyc.textContent = (d.pctIYtd || 0) + '%'; }
+      if (ep) { ep.style.width = Math.round(d.pctE * monthFactor) + '%'; epc.textContent = Math.round(d.pctE * monthFactor) + '%'; }
+      if (epy) { epy.style.width = Math.round(d.pctEYtd * monthFactor) + '%'; epyc.textContent = Math.round(d.pctEYtd * monthFactor) + '%'; }
 
       // chart: scale based on BU
       const scale = d.fteT / 29;
-      const earned = baseEarned.map(v => v ? Math.round(v * scale) : 0);
-      const invoiced = baseInvoiced.map(v => v ? Math.round(v * scale) : 0);
-      buildChart(earned, invoiced);
+      
+      // Filter chart data based on selected months
+      let earned = [...baseEarned];
+      let lastYearEarned = [...baseEarnedLY];
+      
+      if (!selectedMonths.includes('all')) {
+        earned = earned.map((v, i) => selectedMonths.includes(String(i + 1)) ? v : 0);
+        lastYearEarned = lastYearEarned.map((v, i) => selectedMonths.includes(String(i + 1)) ? v : 0);
+      }
+      
+      earned = earned.map(v => v ? Math.round(v * scale) : 0);
+      lastYearEarned = lastYearEarned.map(v => v ? Math.round(v * scale) : 0);
+      
+      buildChart(earned, lastYearEarned);
     }
 
     function resetFilters() {
       document.getElementById('filterYear').value = '2026';
-      document.getElementById('filterMonth').value = 'all';
+            selectedMonths = ['all'];
+      document.querySelectorAll('#monthOptions input').forEach(cb => { cb.checked = cb.value === 'all'; });
+      document.getElementById('monthSelectText').textContent = 'All Months';
       document.getElementById('filterBU').value = 'all';
       updateDashboard();
     }
@@ -1154,6 +1296,7 @@
       if (!tooltip) return;
 
       card.addEventListener('mouseenter', () => {
+        return; // Tooltips hidden for now
         // Show tooltip temporarily to measure it
         tooltip.style.display = 'block';
         tooltip.style.opacity = '0';
